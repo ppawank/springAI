@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Chat Demo</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
+    textarea { width: 100%; height: 6rem; }
+    input[type=text] { width: 100%; }
+    .response { margin-top: 1rem; padding: .75rem; background:#f5f5f5; border-radius:4px; white-space:pre-wrap; }
+    button { padding:.6rem 1.2rem; margin-top:.5rem; }
+  </style>
+</head>
+<body>
+<h1>AI Chat Demo</h1>
+<label>Prompt:</label><br>
+<textarea id="prompt" placeholder="Ask something..."></textarea>
+<label>Model (optional):</label><br>
+<input id="model" type="text" placeholder="e.g. gpt-4o-mini" />
+<br>
+<button id="sendBtn">Send</button>
+<div id="status"></div>
+<div class="response" id="response"></div>
+<script>
+  async function send() {
+    const prompt = document.getElementById('prompt').value.trim();
+    const model = document.getElementById('model').value.trim();
+    if(!prompt){
+      document.getElementById('status').textContent = 'Prompt must not be blank';
+      return;
+    }
+    document.getElementById('status').textContent = 'Sending...';
+    document.getElementById('response').textContent = '';
+    try {
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, model: model || null })
+      });
+      const data = await res.json();
+      document.getElementById('status').textContent = res.ok ? 'OK' : 'Error ' + res.status;
+      document.getElementById('response').textContent = data.answer;
+    } catch (e) {
+      document.getElementById('status').textContent = 'Network error';
+      document.getElementById('response').textContent = e.message;
+    }
+  }
+  document.getElementById('sendBtn').addEventListener('click', send);
+</script>
+<p>Quick GET test (opens in a new tab): <a href="/api/ai/chat?prompt=Hello">/api/ai/chat?prompt=Hello</a></p>
+</body>
+</html>
+
