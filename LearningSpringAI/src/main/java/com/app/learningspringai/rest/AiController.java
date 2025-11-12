@@ -1,10 +1,13 @@
 package com.app.learningspringai.rest;
 
+import com.app.learningspringai.model.ChatRequest;
+import com.app.learningspringai.model.ChatResponse;
+import com.app.learningspringai.service.AiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/ai")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*") // allow calling from a different frontend origin during development
 public class AiController {
 
@@ -15,12 +18,17 @@ public class AiController {
     }
 
 
-    @GetMapping("/chat")
-    public ResponseEntity<ChatResponse> chat(@RequestParam String prompt, @RequestParam(required = false) String model) {
-        if (prompt == null || prompt.isBlank()) {
+    @PostMapping("/ai/chat")
+    public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request) {
+        if (request.prompt() == null || request.prompt().isBlank()) {
             return ResponseEntity.badRequest().body(new ChatResponse("Prompt must not be blank"));
         }
-        String answer = aiService.ask(prompt, model);
+        String answer = aiService.ask(request.prompt(), request.model());
         return ResponseEntity.ok(new ChatResponse(answer));
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("AI Service is up and running!");
     }
 }

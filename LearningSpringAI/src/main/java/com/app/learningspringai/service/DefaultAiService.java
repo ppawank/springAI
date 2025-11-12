@@ -1,4 +1,4 @@
-package com.app.learningspringai.rest;
+package com.app.learningspringai.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

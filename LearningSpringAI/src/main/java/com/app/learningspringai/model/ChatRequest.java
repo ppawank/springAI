@@ -1,4 +1,4 @@
-package com.app.learningspringai.rest;
+package com.app.learningspringai.model;
 
 /**
  * Request body for chat endpoint.

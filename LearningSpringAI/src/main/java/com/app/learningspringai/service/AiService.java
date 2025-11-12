@@ -1,4 +1,4 @@
-package com.app.learningspringai.rest;
+package com.app.learningspringai.service;
 
 /**
  * Simple abstraction over the underlying AI chat client so the controller can be
